@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import CustomersView from "./views/CustomersView";
 import {Provider} from "react-redux";
 import {configureStore, createSlice} from "@reduxjs/toolkit";
+import CarForm from "./views/CarForm";
 
 const theme = createTheme();
 
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "/customers",
     element: <CustomersView theme={theme}/>
+  },
+  {
+    path: "/carform",
+    element: <CarForm theme={theme}/>
   }
 ]);
 

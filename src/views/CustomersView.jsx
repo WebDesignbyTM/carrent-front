@@ -1,23 +1,37 @@
 import CustomTable from "../components/CustomTable";
 import axios from 'axios';
+import { useState, useEffect } from "react";
 
 export default function CustomersView(props) {
-    const headers = {
-        'Content-Type': 'application/json'
-    };
-    // fetch("http://127.0.0.1:8080/customers", headers)
-    //     .then(res => res.json())
-    //     .then(data => console.log(data));
     const token = sessionStorage.getItem("accessToken");
-    axios.get("http://127.0.0.1:8080/hello", {
-        headers: {
-            Authorization: "Bearer " + token
-        }
-    })
-        .then(res => console.log(res.data))
+    const headers = {
+        Authorization: "Bearer " + token
+    };
+    const [customers, setCustomers] = useState([]);
+    const [customerFields, setCustomerFields] = useState([]);
+
+    useEffect(() => {
+        axios.get("http://127.0.0.1:8080/customers", {
+            headers: headers
+        })
+            .then(res => {
+                setCustomers(res.data);
+                setCustomerFields(Object.keys(res.data[0]).filter(elem => elem !== "passHash"));
+            })
+    }, []);
+
+    const handleDelete = (email) => {
+        axios.delete("http://localhost:8080/customers", {
+            headers: headers,
+            data: {
+                email: email
+            }
+        })
+    }
+
     return (
-      <div>
-        <CustomTable></CustomTable>
-      </div>
+        <div>
+            <CustomTable tableData={customers} fields={customerFields} deleteAction={handleDelete}></CustomTable>
+        </div>
     );
 }

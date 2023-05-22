@@ -14,20 +14,28 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import {useSelector} from "react-redux";
+import axios from "axios";
 
 export default function SignUp(props) {
     let theme = props.theme;
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
+        const sentData = {
+            name: data.get('firstName') + data.get('lastName'),
             email: data.get('email'),
-            password: data.get('password'),
-        });
+            phone: data.get('phone'),
+            password: data.get('password')
+        }
+        axios.post("http://localhost:8080/customer/register", sentData)
+            .then(() => {
+                console.log("Signup successful")
+            })
+            .catch(err => {
+                console.log(err)
+            })
     };
 
-    // let token = useSelector(state => state.token);
-    // console.log(token);
     console.log(sessionStorage.getItem("accessToken"))
 
     return (
@@ -86,6 +94,16 @@ export default function SignUp(props) {
                                         label="Email Address"
                                         name="email"
                                         autoComplete="email"
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        required
+                                        fullWidth
+                                        id="phone"
+                                        label="Phone Number"
+                                        name="phone"
+                                        autoComplete="phone"
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
